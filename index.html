@@ -247,9 +247,22 @@
       floaties.appendChild(heart);
     }
 
-    document.getElementById("noButton").addEventListener("click", () => {
+    const noButton = document.getElementById("noButton");
+
+    function dodgeNoButton() {
+      // A cheekier dodge on hover, with a moderate range so it stays inside the card.
+      const x = Math.round((Math.random() * 2 - 1) * 112);
+      const y = Math.round((Math.random() * 2 - 1) * 48);
+      noButton.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    // Make it dodge as soon as she tries to hover over it (desktop/laptop).
+    noButton.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse" || event.pointerType === "pen") dodgeNoButton();
+    });
+
+    noButton.addEventListener("click", () => {
       noCount++;
-      const noButton = document.getElementById("noButton");
       noButton.textContent = noLabels[Math.min(noCount - 1, noLabels.length - 1)];
       yesScale = Math.min(1 + noCount * 0.075, 1.55);
       document.getElementById("yesButton").style.transform = `scale(${yesScale})`;
@@ -257,11 +270,7 @@
         noCount < 3 ? "me respectfully asking one more time 🥰" :
         noCount < 6 ? "your monkey has requested a team meeting 😭" :
         "okay but look at this face 🥺";
-
-      // A tiny dodge around its original position; never leaves the action row/card.
-      const x = Math.round((Math.random() * 2 - 1) * 78);
-      const y = Math.round((Math.random() * 2 - 1) * 36);
-      noButton.style.transform = `translate(${x}px, ${y}px)`;
+      dodgeNoButton();
     });
 
     document.getElementById("yesButton").addEventListener("click", () => {
