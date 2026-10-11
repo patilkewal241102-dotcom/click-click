@@ -359,7 +359,7 @@
         `🍓 Food: ${state.food}`,
         "See you soon! 🙈💕"
       ].join("\n");
-      const whatsappUrl = `https://wa.me/917700090027?text=${encodeURIComponent(message)}`;
+      const whatsappUrl = `https://wa.me/917700090027?${new URLSearchParams({ text: message }).toString()}`;
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     });
 
