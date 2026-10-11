@@ -359,11 +359,11 @@
         `🍓 Food: ${state.food}`,
         "See you soon! 🙈💕"
       ].join("\n");
-      // URLSearchParams encodes the message as UTF-8, including emoji and line breaks.
-      const whatsappParams = new URLSearchParams();
-      whatsappParams.set("text", message);
-      const whatsappUrl = `https://wa.me/917700090027?${whatsappParams.toString()}`;
-      window.open(whatsappUrl, "_blank");
+      // Encode the full message explicitly as UTF-8 for WhatsApp Web.
+      // Using WhatsApp Web's send endpoint avoids an extra wa.me redirect.
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://web.whatsapp.com/send?phone=917700090027&text=${encodedMessage}`;
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     });
 
     function makeConfetti() {
