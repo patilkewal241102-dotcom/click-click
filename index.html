@@ -92,7 +92,10 @@
     .photo-slot img { display: block; width: 100%; max-height: 380px; object-fit: cover; border-radius: 14px; margin-bottom: 10px; }
     .photo-slot input { margin-top: 12px; background: white; }
     .final-message { text-align: center; font-family: Georgia, serif; font-size: clamp(1.35rem, 4vw, 1.8rem); color: var(--pink-dark); margin: 22px 0 8px; }
-    .music-toggle { position: fixed; z-index: 5; top: 14px; right: 14px; border: 1px solid #edc8d6; border-radius: 999px; background: #fffaf5eF; color: var(--pink-dark); padding: 10px 13px; box-shadow: 0 5px 18px #7e2d4e13; font-size: .82rem; font-weight: 800; }
+    .music-toggle { position: fixed; z-index: 5; top: 14px; right: 14px; border: 1px solid #edc8d6; border-radius: 999px; background: #fffaf5ef; color: var(--pink-dark); padding: 10px 13px; box-shadow: 0 5px 18px #7e2d4e13; font-size: .82rem; font-weight: 800; }
+    .song-player { position: fixed; z-index: 20; right: 12px; bottom: 12px; width: min(340px, calc(100vw - 24px)); background: #fffaf5; border: 1px solid #edc8d6; border-radius: 16px; padding: 8px; box-shadow: 0 10px 30px #7e2d4e30; }
+    .song-player iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 10px; }
+    .song-player .song-caption { font-size: .78rem; font-weight: 800; padding: 5px 4px 2px; color: var(--pink-dark); }
     .confetti { position: fixed; top: -20px; z-index: 10; pointer-events: none; animation: fall 3.4s ease-in forwards; }
     @keyframes fall { to { transform: translateY(110vh) rotate(700deg); opacity: .1; } }
     .hidden { display: none !important; }
@@ -115,12 +118,12 @@
 </head>
 <body>
   <div class="floaties" id="floaties" aria-hidden="true"></div>
-  <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">♫ Music off</button>
+  <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">♫ Play Jhak Maar Ke</button>
   <main class="page">
     <section class="card" id="screen-question" aria-labelledby="question-title">
       <div class="eyebrow">A small question for Jenso</div>
       <h1 id="question-title">Will you go on a date with me? 💌</h1>
-      <p class="subtitle">I have a tiny question for my favourite person. Choose wisely… 👀</p>
+      <p class="subtitle">I have a tiny question for my Manpasandida person. Choose wisely… 👀</p>
       <div class="meme" aria-label="A dramatic cat illustration">
         <div>
           <div class="emoji">🐱</div>
@@ -131,12 +134,12 @@
         <button class="btn btn-primary" id="yesButton" type="button">♥ Yes, I'd love to</button>
         <button class="btn btn-soft" id="noButton" type="button">Nope 🙃</button>
       </div>
-      <p class="tiny-note" id="questionNote">No pressure, just a very important question. 💗</p>
+      <p class="tiny-note" id="questionNote">No pressureee 💗</p>
     </section>
 
     <section class="card hidden" id="screen-date" aria-labelledby="date-title">
       <div class="topline"><span>YOUR LITTLE DATE PLAN</span><span class="step-pill">STEP 1 OF 2</span></div>
-      <h2 id="date-title">When works for you, Jenso?</h2>
+      <h2 id="date-title">When works for Miss Jenso💅🏻?</h2>
       <p class="subtitle">Pick a date, a time, and the kind of little adventure you'd like. ✨</p>
       <div class="field-grid">
         <div class="field">
@@ -162,8 +165,8 @@
           <button class="choice" data-value="Cozy Coffee" type="button"><span class="icon">☕</span><span><strong>Cozy Coffee</strong><small>Talk for hours</small></span></button>
           <button class="choice" data-value="Sunset Walk" type="button"><span class="icon">🌇</span><span><strong>Sunset Walk</strong><small>Golden-hour vibes</small></span></button>
           <button class="choice" data-value="Dinner & a Movie" type="button"><span class="icon">🍿</span><span><strong>Dinner & a Movie</strong><small>A classic combo</small></span></button>
-          <button class="choice" data-value="Mini Golf" type="button"><span class="icon">⛳</span><span><strong>Mini Golf</strong><small>Winner picks dessert</small></span></button>
-          <button class="choice" data-value="Bookstore Wander" type="button"><span class="icon">📚</span><span><strong>Bookstore Wander</strong><small>Pick a book for each other</small></span></button>
+          <button class="choice" data-value="Lunch" type="button"><span class="icon">🍽️</span><span><strong>Lunch</strong><small>A little lunch date</small></span></button>
+          <button class="choice" data-value="Cooking Date" type="button"><span class="icon">👩🏻‍🍳</span><span><strong>Cooking Date</strong><small>Let’s make something yummy</small></span></button>
           <button class="choice" data-value="Surprise Me" type="button"><span class="icon">🎁</span><span><strong>Surprise Me</strong><small>I trust your taste</small></span></button>
         </div>
       </div>
@@ -200,12 +203,6 @@
       <div class="eyebrow">officially the cutest plan</div>
       <h1 id="final-title">It's a date, Jenso! 🌹</h1>
       <p class="subtitle">Okay, now this is something to smile about.</p>
-      <div class="meme">
-        <div>
-          <div class="emoji">🐶💐</div>
-          <div class="caption">me showing up with the biggest smile</div>
-        </div>
-      </div>
       <div class="summary" id="summary"></div>
       <div class="photo-slot" id="photoSlot">
         <div>
@@ -216,7 +213,7 @@
           <input id="photoInput" type="file" accept="image/*" class="hidden">
         </div>
       </div>
-      <p class="final-message">I'll pick you up at 7. 🚗</p>
+      <p class="final-message" id="finalMessage">I'll pick you up at 7:00 PM. 🚗</p>
       <p class="subtitle">Can't wait to see you! ✨</p>
       <div class="actions">
         <button class="btn btn-primary" id="celebrateAgain" type="button">One more little celebration 🎉</button>
@@ -265,11 +262,17 @@
         noCount < 3 ? "me respectfully asking one more time 🥺" :
         noCount < 6 ? "the cat has requested a team meeting 😭" :
         "okay but look at this face 🥹";
-      // Keep both choices usable; the playful sequence never blocks the Yes option.
+      // It dodges around the screen on every click, but stays within the visible viewport.
+      noButton.style.position = "fixed";
+      noButton.style.zIndex = "30";
+      const margin = 18;
+      const maxX = Math.max(margin, window.innerWidth - noButton.offsetWidth - margin);
+      const maxY = Math.max(margin, window.innerHeight - noButton.offsetHeight - margin);
+      noButton.style.left = `${margin + Math.random() * (maxX - margin)}px`;
+      noButton.style.top = `${margin + Math.random() * (maxY - margin)}px`;
     });
 
     document.getElementById("yesButton").addEventListener("click", () => {
-      startMusic();
       const dateInput = document.getElementById("dateInput");
       const today = new Date();
       const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -320,10 +323,11 @@
       const error = document.getElementById("foodError");
       if (!state.food) { error.textContent = "Pick something delicious first 🍓"; return; }
       error.textContent = "";
+      state.time = document.getElementById("timeInput").value || state.time;
       renderSummary();
+      document.getElementById("finalMessage").textContent = `I'll pick you up at ${state.time}. 🚗`;
       showScreen("screen-final");
       makeConfetti();
-      startMusic();
     });
 
     function formatDate(dateString) {
@@ -362,56 +366,27 @@
       }
     }
 
-    // A tiny synthesized dreamy melody means the page has gentle music without a third-party audio dependency.
-    // It starts only after a visitor clicks a control, respecting browser autoplay restrictions.
+    // The music button opens the official T-Series video for “Jhak Maar Ke”.
+    // Playback starts only after a visitor clicks, respecting browser autoplay restrictions.
+    let songPlayer = null;
     function startMusic() {
-      if (musicOn) return;
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) {
-        document.getElementById("musicToggle").textContent = "♫ Music unavailable";
-        return;
-      }
-      if (!audioContext) audioContext = new AudioCtx();
-      if (audioContext.state === "suspended") audioContext.resume();
-      musicOn = true;
-      document.getElementById("musicToggle").textContent = "♫ Music on";
-      document.getElementById("musicToggle").setAttribute("aria-pressed", "true");
-      const notes = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880, 698.46, 523.25, 659.25, 783.99, 1046.5];
-      let index = 0;
-      const playNote = () => {
-        if (!musicOn || !audioContext) return;
-        const now = audioContext.currentTime;
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        const soft = audioContext.createOscillator();
-        const softGain = audioContext.createGain();
-        osc.type = "sine";
-        osc.frequency.value = notes[index % notes.length];
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.035, now + 0.12);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.15);
-        soft.type = "sine";
-        soft.frequency.value = notes[index % notes.length] / 2;
-        softGain.gain.setValueAtTime(0.0001, now);
-        softGain.gain.exponentialRampToValueAtTime(0.012, now + 0.2);
-        softGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.35);
-        osc.connect(gain); gain.connect(audioContext.destination);
-        soft.connect(softGain); softGain.connect(audioContext.destination);
-        osc.start(now); soft.start(now);
-        osc.stop(now + 1.2); soft.stop(now + 1.4);
-        index++;
-      };
-      playNote();
-      musicTimer = setInterval(playNote, 850);
+      if (songPlayer) return;
+      songPlayer = document.createElement("div");
+      songPlayer.className = "song-player";
+      songPlayer.innerHTML = '<iframe title="Jhak Maar Ke from Desi Boyz — official T-Series video" src="https://www.youtube-nocookie.com/embed/R5CxtjmrIE4?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe><div class="song-caption">♫ Jhak Maar Ke · Desi Boyz</div>';
+      document.body.appendChild(songPlayer);
+      const toggle = document.getElementById("musicToggle");
+      toggle.textContent = "♫ Stop music";
+      toggle.setAttribute("aria-pressed", "true");
     }
     function stopMusic() {
-      musicOn = false;
-      if (musicTimer) clearInterval(musicTimer);
-      musicTimer = null;
-      document.getElementById("musicToggle").textContent = "♫ Music off";
-      document.getElementById("musicToggle").setAttribute("aria-pressed", "false");
+      if (songPlayer) songPlayer.remove();
+      songPlayer = null;
+      const toggle = document.getElementById("musicToggle");
+      toggle.textContent = "♫ Play Jhak Maar Ke";
+      toggle.setAttribute("aria-pressed", "false");
     }
-    document.getElementById("musicToggle").addEventListener("click", () => musicOn ? stopMusic() : startMusic());
+    document.getElementById("musicToggle").addEventListener("click", () => songPlayer ? stopMusic() : startMusic());
 
     function handlePhotoChange(event) {
       const file = event.target.files && event.target.files[0];
