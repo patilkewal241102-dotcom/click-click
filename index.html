@@ -212,7 +212,7 @@
       <p class="final-message" id="finalMessage">I'll pick you up at 7:00 PM. 🚗</p>
       <p class="subtitle">Can't wait to see you! ✨</p>
       <div class="actions">
-        <button class="btn btn-primary" id="celebrateAgain" type="button">One more little celebration 🎉</button>
+        <button class="btn btn-primary" id="celebrateAgain" type="button">Confirm your booking 😉</button>
         <button class="btn btn-soft" id="changePlan" type="button">Change the plan</button>
       </div>
       <p class="footer-note">Made with a little courage and a lot of 💗</p>
@@ -349,7 +349,19 @@
       return String(value).replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[char]));
     }
     document.getElementById("changePlan").addEventListener("click", () => showScreen("screen-date"));
-    document.getElementById("celebrateAgain").addEventListener("click", makeConfetti);
+    document.getElementById("celebrateAgain").addEventListener("click", () => {
+      makeConfetti();
+      const message = [
+        "Heyyy! 🥰 My date booking is confirmed! 💗",
+        `📅 Date: ${formatDate(state.date)}`,
+        `🕰️ Time: ${state.time}`,
+        `📍 Plan: ${state.activity}`,
+        `🍓 Food: ${state.food}`,
+        "See you soon! 🙈💕"
+      ].join("\n");
+      const whatsappUrl = `https://wa.me/917700090027?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    });
 
     function makeConfetti() {
       const colors = ["#d6336c", "#f2a7c2", "#f8c76b", "#c6a2d8", "#ffffff"];
