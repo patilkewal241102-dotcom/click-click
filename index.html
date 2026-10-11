@@ -120,7 +120,7 @@
 </head>
 <body>
   <div class="floaties" id="floaties" aria-hidden="true"></div>
-  <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">♫ Play Jhak Maar Ke</button>
+  <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">♫ Play music</button>
   <main class="page">
     <section class="card" id="screen-question" aria-labelledby="question-title">
       <div class="eyebrow">A small question for Jenso</div>
@@ -380,7 +380,7 @@
         musicToggle.textContent = "♫ Stop music";
         musicToggle.setAttribute("aria-pressed", "true");
       }).catch(() => {
-        musicToggle.textContent = "♫ Play Jhak Maar Ke";
+        musicToggle.textContent = "♫ Play music";
         musicToggle.setAttribute("aria-pressed", "false");
       });
     }
@@ -391,7 +391,7 @@
         musicPlayer.currentTime = 0;
       }
       musicPlayer = null;
-      musicToggle.textContent = "♫ Play Jhak Maar Ke";
+      musicToggle.textContent = "♫ Play music";
       musicToggle.setAttribute("aria-pressed", "false");
     }
     // Try autoplay when the page opens. Browsers may block audible autoplay;
