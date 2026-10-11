@@ -359,8 +359,9 @@
         `🍓 Food: ${state.food}`,
         "See you soon! 🙈💕"
       ].join("\n");
-      const whatsappUrl = `https://wa.me/917700090027?${new URLSearchParams({ text: message }).toString()}`;
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      // Encode the complete message as UTF-8 so emoji characters survive the handoff to WhatsApp.
+      const whatsappUrl = `https://wa.me/917700090027?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, "_blank");
     });
 
     function makeConfetti() {
