@@ -126,9 +126,9 @@
       <div class="eyebrow">A small question for Jenso</div>
       <h1 id="question-title">Will you go on a date with me? 💌</h1>
       <p class="subtitle">I have a tiny question for my Manpasandida person. Choose wisely… 👀</p>
-      <div class="meme" aria-label="A dramatic cat illustration">
+      <div class="meme" aria-label="A shy see-no-evil monkey emoji">
         <div>
-          <div class="emoji">🐱</div>
+          <div class="emoji">🙈</div>
           <div class="caption" id="catCaption">me trying to act casual while asking you this</div>
         </div>
       </div>
@@ -254,13 +254,13 @@
       yesScale = Math.min(1 + noCount * 0.075, 1.55);
       document.getElementById("yesButton").style.transform = `scale(${yesScale})`;
       document.getElementById("catCaption").textContent =
-        noCount < 3 ? "me respectfully asking one more time 🥺" :
-        noCount < 6 ? "the cat has requested a team meeting 😭" :
-        "okay but look at this face 🥹";
+        noCount < 3 ? "me respectfully asking one more time 🥰" :
+        noCount < 6 ? "your monkey has requested a team meeting 😭" :
+        "okay but look at this face 🥺";
 
       // A tiny dodge around its original position; never leaves the action row/card.
-      const x = Math.round((Math.random() * 2 - 1) * 42);
-      const y = Math.round((Math.random() * 2 - 1) * 22);
+      const x = Math.round((Math.random() * 2 - 1) * 78);
+      const y = Math.round((Math.random() * 2 - 1) * 36);
       noButton.style.transform = `translate(${x}px, ${y}px)`;
     });
 
