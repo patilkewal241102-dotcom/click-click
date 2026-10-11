@@ -94,8 +94,10 @@
     .final-message { text-align: center; font-family: Georgia, serif; font-size: clamp(1.35rem, 4vw, 1.8rem); color: var(--pink-dark); margin: 22px 0 8px; }
     .music-toggle { position: fixed; z-index: 5; top: 14px; right: 14px; border: 1px solid #edc8d6; border-radius: 999px; background: #fffaf5ef; color: var(--pink-dark); padding: 10px 13px; box-shadow: 0 5px 18px #7e2d4e13; font-size: .82rem; font-weight: 800; }
     .song-player { position: fixed; z-index: 20; right: 12px; bottom: 12px; width: min(340px, calc(100vw - 24px)); background: #fffaf5; border: 1px solid #edc8d6; border-radius: 16px; padding: 8px; box-shadow: 0 10px 30px #7e2d4e30; }
-    .song-player iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 10px; }
+    .song-player audio { display: block; width: 100%; height: 38px; }
     .song-player .song-caption { font-size: .78rem; font-weight: 800; padding: 5px 4px 2px; color: var(--pink-dark); }
+    .actions { position: relative; }
+    #noButton { position: relative; }
     .confetti { position: fixed; top: -20px; z-index: 10; pointer-events: none; animation: fall 3.4s ease-in forwards; }
     @keyframes fall { to { transform: translateY(110vh) rotate(700deg); opacity: .1; } }
     .hidden { display: none !important; }
@@ -205,13 +207,7 @@
       <p class="subtitle">Okay, now this is something to smile about.</p>
       <div class="summary" id="summary"></div>
       <div class="photo-slot" id="photoSlot">
-        <div>
-          <div class="camera">📸💗</div>
-          <strong>Our photo goes here</strong>
-          <p style="margin:8px 0 0">We'll add your favourite photo of you two when you're ready.</p>
-          <label for="photoInput" class="btn btn-soft btn-small" style="display:inline-flex;align-items:center;margin-top:14px">Choose our photo</label>
-          <input id="photoInput" type="file" accept="image/*" class="hidden">
-        </div>
+        <img src="our-photo.jpeg" alt="Our favourite photo together" style="display:block;width:100%;max-height:420px;object-fit:cover;border-radius:14px;margin:0">
       </div>
       <p class="final-message" id="finalMessage">I'll pick you up at 7:00 PM. 🚗</p>
       <p class="subtitle">Can't wait to see you! ✨</p>
@@ -232,7 +228,6 @@
     let audioContext = null;
     let musicTimer = null;
     let musicOn = false;
-    let photoUrl = null;
 
     function showScreen(id) {
       screens.forEach(screenId => document.getElementById(screenId).classList.toggle("hidden", screenId !== id));
@@ -262,14 +257,11 @@
         noCount < 3 ? "me respectfully asking one more time 🥺" :
         noCount < 6 ? "the cat has requested a team meeting 😭" :
         "okay but look at this face 🥹";
-      // It dodges around the screen on every click, but stays within the visible viewport.
-      noButton.style.position = "fixed";
-      noButton.style.zIndex = "30";
-      const margin = 18;
-      const maxX = Math.max(margin, window.innerWidth - noButton.offsetWidth - margin);
-      const maxY = Math.max(margin, window.innerHeight - noButton.offsetHeight - margin);
-      noButton.style.left = `${margin + Math.random() * (maxX - margin)}px`;
-      noButton.style.top = `${margin + Math.random() * (maxY - margin)}px`;
+
+      // A tiny dodge around its original position; never leaves the action row/card.
+      const x = Math.round((Math.random() * 2 - 1) * 42);
+      const y = Math.round((Math.random() * 2 - 1) * 22);
+      noButton.style.transform = `translate(${x}px, ${y}px)`;
     });
 
     document.getElementById("yesButton").addEventListener("click", () => {
@@ -323,7 +315,6 @@
       const error = document.getElementById("foodError");
       if (!state.food) { error.textContent = "Pick something delicious first 🍓"; return; }
       error.textContent = "";
-      state.time = document.getElementById("timeInput").value || state.time;
       renderSummary();
       document.getElementById("finalMessage").textContent = `I'll pick you up at ${state.time}. 🚗`;
       showScreen("screen-final");
@@ -366,54 +357,39 @@
       }
     }
 
-    // The music button opens the official T-Series video for “Jhak Maar Ke”.
-    // Playback starts only after a visitor clicks, respecting browser autoplay restrictions.
-    let songPlayer = null;
+    // Local audio file is hosted alongside this page in the GitHub Pages repository.
+    const songAudio = new Audio("jhak-maar-ke.mp3");
+    songAudio.preload = "none";
+    songAudio.loop = true;
+    const musicToggle = document.getElementById("musicToggle");
+    let musicPlayer = null;
+
     function startMusic() {
-      if (songPlayer) return;
-      songPlayer = document.createElement("div");
-      songPlayer.className = "song-player";
-      songPlayer.innerHTML = '<iframe title="Jhak Maar Ke from Desi Boyz — official T-Series video" src="https://www.youtube-nocookie.com/embed/R5CxtjmrIE4?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe><div class="song-caption">♫ Jhak Maar Ke · Desi Boyz</div>';
-      document.body.appendChild(songPlayer);
-      const toggle = document.getElementById("musicToggle");
-      toggle.textContent = "♫ Stop music";
-      toggle.setAttribute("aria-pressed", "true");
+      if (musicPlayer) return;
+      musicPlayer = document.createElement("div");
+      musicPlayer.className = "song-player";
+      musicPlayer.innerHTML = '<div class="song-caption">♫ Jhak Maar Ke · Desi Boyz</div><audio controls loop preload="none"><source src="jhak-maar-ke.mp3" type="audio/mpeg">Your browser does not support audio playback.</audio>';
+      document.body.appendChild(musicPlayer);
+      const audio = musicPlayer.querySelector("audio");
+      audio.play().then(() => {
+        musicToggle.textContent = "♫ Stop music";
+        musicToggle.setAttribute("aria-pressed", "true");
+      }).catch(() => {
+        musicToggle.textContent = "♫ Play Jhak Maar Ke";
+        musicToggle.setAttribute("aria-pressed", "false");
+      });
     }
     function stopMusic() {
-      if (songPlayer) songPlayer.remove();
-      songPlayer = null;
-      const toggle = document.getElementById("musicToggle");
-      toggle.textContent = "♫ Play Jhak Maar Ke";
-      toggle.setAttribute("aria-pressed", "false");
+      if (musicPlayer) {
+        const audio = musicPlayer.querySelector("audio");
+        if (audio) { audio.pause(); audio.currentTime = 0; }
+        musicPlayer.remove();
+      }
+      musicPlayer = null;
+      musicToggle.textContent = "♫ Play Jhak Maar Ke";
+      musicToggle.setAttribute("aria-pressed", "false");
     }
-    document.getElementById("musicToggle").addEventListener("click", () => songPlayer ? stopMusic() : startMusic());
-
-    function handlePhotoChange(event) {
-      const file = event.target.files && event.target.files[0];
-      if (!file) return;
-      if (photoUrl) URL.revokeObjectURL(photoUrl);
-      photoUrl = URL.createObjectURL(file);
-      const slot = document.getElementById("photoSlot");
-      slot.innerHTML = "";
-      const image = document.createElement("img");
-      image.src = photoUrl;
-      image.alt = "Our favourite photo together";
-      const label = document.createElement("label");
-      label.htmlFor = "photoInput";
-      label.className = "btn btn-soft btn-small";
-      label.textContent = "Choose a different photo";
-      label.style.cssText = "display:inline-flex;align-items:center;margin-top:10px";
-      const input = document.createElement("input");
-      input.id = "photoInput";
-      input.type = "file";
-      input.accept = "image/*";
-      input.className = "hidden";
-      input.addEventListener("change", handlePhotoChange);
-      slot.appendChild(image);
-      slot.appendChild(label);
-      slot.appendChild(input);
-    }
-    document.getElementById("photoInput").addEventListener("change", handlePhotoChange);
+    musicToggle.addEventListener("click", () => musicPlayer ? stopMusic() : startMusic());
 
   </script>
 </body>
