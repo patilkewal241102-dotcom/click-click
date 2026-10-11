@@ -359,8 +359,10 @@
         `🍓 Food: ${state.food}`,
         "See you soon! 🙈💕"
       ].join("\n");
-      // Encode the complete message as UTF-8 so emoji characters survive the handoff to WhatsApp.
-      const whatsappUrl = `https://wa.me/917700090027?text=${encodeURIComponent(message)}`;
+      // URLSearchParams encodes the message as UTF-8, including emoji and line breaks.
+      const whatsappParams = new URLSearchParams();
+      whatsappParams.set("text", message);
+      const whatsappUrl = `https://wa.me/917700090027?${whatsappParams.toString()}`;
       window.open(whatsappUrl, "_blank");
     });
 
