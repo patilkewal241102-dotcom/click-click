@@ -365,14 +365,18 @@
     let musicPlayer = null;
 
     function startMusic() {
-      if (musicPlayer) return;
-      musicPlayer = document.createElement("div");
-      musicPlayer.className = "song-player";
-      musicPlayer.innerHTML = '<div class="song-caption">♫ Jhak Maar Ke · Desi Boyz</div><audio controls loop preload="auto"><source type="audio/mpeg">Your browser does not support audio playback.</audio>';
-      document.body.appendChild(musicPlayer);
-      const audio = musicPlayer.querySelector("audio");
-      audio.src = songAudio.src;
-      audio.play().then(() => {
+      if (musicPlayer) {
+        if (musicPlayer.paused) musicPlayer.play().catch(() => {});
+        return;
+      }
+      // Audio is kept invisible: no floating song box or controls in the corner.
+      musicPlayer = new Audio(songAudio.src);
+      musicPlayer.loop = true;
+      musicPlayer.preload = "auto";
+      musicPlayer.play().then(() => {
+        window.removeEventListener("pointerdown", retryMusicOnce);
+        window.removeEventListener("keydown", retryMusicOnce);
+        window.removeEventListener("touchstart", retryMusicOnce);
         musicToggle.textContent = "♫ Stop music";
         musicToggle.setAttribute("aria-pressed", "true");
       }).catch(() => {
@@ -380,11 +384,11 @@
         musicToggle.setAttribute("aria-pressed", "false");
       });
     }
+
     function stopMusic() {
       if (musicPlayer) {
-        const audio = musicPlayer.querySelector("audio");
-        if (audio) { audio.pause(); audio.currentTime = 0; }
-        musicPlayer.remove();
+        musicPlayer.pause();
+        musicPlayer.currentTime = 0;
       }
       musicPlayer = null;
       musicToggle.textContent = "♫ Play Jhak Maar Ke";
@@ -397,13 +401,7 @@
     });
     const retryMusicOnce = () => {
       if (!musicPlayer) startMusic();
-      else {
-        const audio = musicPlayer.querySelector("audio");
-        if (audio && audio.paused) audio.play().catch(() => {});
-      }
-      window.removeEventListener("pointerdown", retryMusicOnce);
-      window.removeEventListener("keydown", retryMusicOnce);
-      window.removeEventListener("touchstart", retryMusicOnce);
+      else if (musicPlayer.paused) musicPlayer.play().catch(() => {});
     };
     window.addEventListener("pointerdown", retryMusicOnce, { once: true });
     window.addEventListener("keydown", retryMusicOnce, { once: true });
