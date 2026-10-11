@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff0f5">
+  <title>A quick question 💌</title>
+  <style>
+    :root {
+      --pink: #f8dce7;
+      --pink-deep: #d6336c;
+      --pink-dark: #a51d4d;
+      --cream: #fffaf5;
+      --ink: #54283b;
+      --muted: #906b7b;
+      --line: #f0d9e2;
+      --shadow: 0 22px 60px rgba(126, 45, 78, .12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--ink);
+      font-family: ui-rounded, "Avenir Next", Avenir, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255,255,255,.9), transparent 24rem),
+        radial-gradient(circle at 90% 85%, rgba(255,255,255,.75), transparent 22rem),
+        linear-gradient(135deg, #fbe5ed, #fff1f5 48%, #f8dce7);
+      overflow-x: hidden;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .floaties { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+    .floaty { position: absolute; bottom: -50px; opacity: .35; animation: drift linear infinite; color: #d85d89; }
+    @keyframes drift { to { transform: translateY(-115vh) rotate(22deg); opacity: 0; } }
+    .page { position: relative; z-index: 1; min-height: 100vh; display: grid; place-items: center; padding: 30px 16px; }
+    .card {
+      width: min(100%, 660px); background: rgba(255,250,245,.94); border: 1px solid rgba(255,255,255,.9);
+      border-radius: 28px; box-shadow: var(--shadow); padding: clamp(22px, 5vw, 44px); position: relative;
+      animation: appear .5s ease both;
+    }
+    @keyframes appear { from { opacity: 0; transform: translateY(12px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .eyebrow { color: var(--pink-dark); text-transform: uppercase; letter-spacing: .19em; font-size: .72rem; font-weight: 800; text-align: center; }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.035em; line-height: 1.08; text-align: center; margin: 13px 0; }
+    h1 { font-size: clamp(2.2rem, 7vw, 4rem); }
+    h2 { font-size: clamp(1.9rem, 5vw, 2.8rem); }
+    .subtitle { color: var(--muted); text-align: center; line-height: 1.65; max-width: 440px; margin: 0 auto 22px; }
+    .meme {
+      margin: 24px auto; width: min(100%, 360px); min-height: 170px; border-radius: 22px;
+      background: linear-gradient(145deg, #ffe4ee, #fff1d9); border: 1px solid #f5d4df;
+      display: grid; place-items: center; padding: 20px; text-align: center; overflow: hidden;
+    }
+    .meme .emoji { font-size: clamp(4rem, 15vw, 6.3rem); line-height: 1.1; filter: drop-shadow(0 7px 6px #d99aaa33); }
+    .meme .caption { margin-top: 10px; font-size: .85rem; font-weight: 800; color: #9e3159; }
+    .actions { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+    .btn { border: 0; border-radius: 999px; padding: 14px 22px; min-height: 48px; font-weight: 750; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+    .btn:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #df7ca1; outline-offset: 3px; }
+    .btn-primary { color: white; background: linear-gradient(135deg, #d93670, #b92258); box-shadow: 0 9px 22px #bf2c6333; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 13px 26px #bf2c6340; }
+    .btn-soft { background: #fff; color: var(--pink-dark); border: 1px solid var(--line); }
+    .btn-soft:hover { background: #fff1f6; }
+    .btn-small { padding: 10px 15px; min-height: 40px; font-size: .9rem; }
+    .tiny-note { text-align: center; color: #aa8493; font-size: .78rem; margin: 18px 0 0; }
+    .topline { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 22px; color: var(--muted); font-size: .8rem; }
+    .step-pill { border-radius: 999px; background: #fce7ef; color: var(--pink-dark); padding: 8px 12px; font-weight: 800; }
+    .field { margin: 20px 0; }
+    label { display: block; font-size: .9rem; font-weight: 800; margin-bottom: 9px; }
+    input, select { width: 100%; min-height: 49px; border: 1px solid #ead1dc; background: #fff; border-radius: 13px; color: var(--ink); padding: 12px 14px; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; margin: 22px 0; }
+    .choice {
+      border: 1px solid #edd6df; background: #fff; border-radius: 16px; padding: 16px 12px; color: var(--ink);
+      min-height: 88px; text-align: left; display: flex; align-items: center; gap: 11px; transition: .18s ease;
+    }
+    .choice:hover { transform: translateY(-2px); border-color: #e39ab6; }
+    .choice.selected { border: 2px solid var(--pink-deep); background: #fff0f5; box-shadow: 0 5px 16px #c82d6520; padding: 15px 11px; }
+    .choice .icon { font-size: 1.8rem; flex: 0 0 auto; }
+    .choice strong { display: block; font-size: .92rem; }
+    .choice small { display: block; color: var(--muted); margin-top: 4px; font-size: .75rem; }
+    .button-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 26px; }
+    .button-row .btn { flex: 1; }
+    .summary { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin: 20px 0; }
+    .summary-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f6e8ed; align-items: start; }
+    .summary-row:last-child { border-bottom: 0; }
+    .summary-icon { width: 30px; text-align: center; font-size: 1.15rem; }
+    .summary-label { color: var(--muted); font-size: .75rem; margin-bottom: 3px; }
+    .summary-value { font-weight: 800; overflow-wrap: anywhere; }
+    .photo-slot {
+      border: 2px dashed #dfa2b8; border-radius: 20px; min-height: 180px; padding: 22px; margin: 22px 0;
+      display: grid; place-items: center; text-align: center; background: #fff4f7; color: var(--muted);
+    }
+    .photo-slot .camera { font-size: 2.5rem; }
+    .photo-slot img { display: block; width: 100%; max-height: 380px; object-fit: cover; border-radius: 14px; margin-bottom: 10px; }
+    .photo-slot input { margin-top: 12px; background: white; }
+    .final-message { text-align: center; font-family: Georgia, serif; font-size: clamp(1.35rem, 4vw, 1.8rem); color: var(--pink-dark); margin: 22px 0 8px; }
+    .music-toggle { position: fixed; z-index: 5; top: 14px; right: 14px; border: 1px solid #edc8d6; border-radius: 999px; background: #fffaf5eF; color: var(--pink-dark); padding: 10px 13px; box-shadow: 0 5px 18px #7e2d4e13; font-size: .82rem; font-weight: 800; }
+    .confetti { position: fixed; top: -20px; z-index: 10; pointer-events: none; animation: fall 3.4s ease-in forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(700deg); opacity: .1; } }
+    .hidden { display: none !important; }
+    .footer-note { text-align: center; font-size: .76rem; color: #a88996; margin-top: 24px; }
+    @media (max-width: 480px) {
+      .page { padding: 64px 12px 20px; align-items: start; }
+      .card { border-radius: 23px; padding: 24px 18px; }
+      .field-grid { grid-template-columns: 1fr; gap: 0; }
+      .choice-grid { gap: 9px; }
+      .choice { padding: 13px 10px; min-height: 80px; gap: 8px; }
+      .choice .icon { font-size: 1.55rem; }
+      .choice strong { font-size: .84rem; }
+      .button-row { flex-direction: column-reverse; }
+      .button-row .btn { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floaties" id="floaties" aria-hidden="true"></div>
+  <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">♫ Music off</button>
+  <main class="page">
+    <section class="card" id="screen-question" aria-labelledby="question-title">
+      <div class="eyebrow">A small question for Jenso</div>
+      <h1 id="question-title">Will you go on a date with me? 💌</h1>
+      <p class="subtitle">I have a tiny question for my favourite person. Choose wisely… 👀</p>
+      <div class="meme" aria-label="A dramatic cat illustration">
+        <div>
+          <div class="emoji">🐱</div>
+          <div class="caption" id="catCaption">me trying to act casual while asking you this</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="yesButton" type="button">♥ Yes, I'd love to</button>
+        <button class="btn btn-soft" id="noButton" type="button">Nope 🙃</button>
+      </div>
+      <p class="tiny-note" id="questionNote">No pressure, just a very important question. 💗</p>
+    </section>
+
+    <section class="card hidden" id="screen-date" aria-labelledby="date-title">
+      <div class="topline"><span>YOUR LITTLE DATE PLAN</span><span class="step-pill">STEP 1 OF 2</span></div>
+      <h2 id="date-title">When works for you, Jenso?</h2>
+      <p class="subtitle">Pick a date, a time, and the kind of little adventure you'd like. ✨</p>
+      <div class="field-grid">
+        <div class="field">
+          <label for="dateInput">📅 Date</label>
+          <input id="dateInput" type="date" required>
+        </div>
+        <div class="field">
+          <label for="timeInput">🕰️ Time</label>
+          <select id="timeInput">
+            <option value="10:00 AM">10:00 AM</option><option value="11:00 AM">11:00 AM</option>
+            <option value="12:00 PM">12:00 PM</option><option value="1:00 PM">1:00 PM</option>
+            <option value="2:00 PM">2:00 PM</option><option value="3:00 PM">3:00 PM</option>
+            <option value="4:00 PM">4:00 PM</option><option value="5:00 PM">5:00 PM</option>
+            <option value="6:00 PM">6:00 PM</option><option value="7:00 PM" selected>7:00 PM</option>
+            <option value="8:00 PM">8:00 PM</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>📍 What sounds fun?</label>
+        <div class="choice-grid" id="activityChoices">
+          <button class="choice" data-value="Arcade Night" type="button"><span class="icon">🕹️</span><span><strong>Arcade Night</strong><small>Friendly competition</small></span></button>
+          <button class="choice" data-value="Cozy Coffee" type="button"><span class="icon">☕</span><span><strong>Cozy Coffee</strong><small>Talk for hours</small></span></button>
+          <button class="choice" data-value="Sunset Walk" type="button"><span class="icon">🌇</span><span><strong>Sunset Walk</strong><small>Golden-hour vibes</small></span></button>
+          <button class="choice" data-value="Dinner & a Movie" type="button"><span class="icon">🍿</span><span><strong>Dinner & a Movie</strong><small>A classic combo</small></span></button>
+          <button class="choice" data-value="Mini Golf" type="button"><span class="icon">⛳</span><span><strong>Mini Golf</strong><small>Winner picks dessert</small></span></button>
+          <button class="choice" data-value="Bookstore Wander" type="button"><span class="icon">📚</span><span><strong>Bookstore Wander</strong><small>Pick a book for each other</small></span></button>
+          <button class="choice" data-value="Surprise Me" type="button"><span class="icon">🎁</span><span><strong>Surprise Me</strong><small>I trust your taste</small></span></button>
+        </div>
+      </div>
+      <p class="tiny-note" id="dateError" role="status"></p>
+      <div class="button-row">
+        <button class="btn btn-soft" id="backToQuestion" type="button">← Back</button>
+        <button class="btn btn-primary" id="toFood" type="button">Next: the food →</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="screen-food" aria-labelledby="food-title">
+      <div class="topline"><span>THE IMPORTANT DECISIONS</span><span class="step-pill">STEP 2 OF 2</span></div>
+      <h2 id="food-title">What should we eat?</h2>
+      <p class="subtitle">A date is lovely. A date with good food? Even better. 🍓</p>
+      <div class="choice-grid" id="foodChoices">
+        <button class="choice" data-value="Italian" type="button"><span class="icon">🍝</span><span><strong>Italian</strong><small>Pasta, please</small></span></button>
+        <button class="choice" data-value="Sushi" type="button"><span class="icon">🍣</span><span><strong>Sushi</strong><small>Little bites, big love</small></span></button>
+        <button class="choice" data-value="Pizza" type="button"><span class="icon">🍕</span><span><strong>Pizza</strong><small>Extra cheese energy</small></span></button>
+        <button class="choice" data-value="Tacos" type="button"><span class="icon">🌮</span><span><strong>Tacos</strong><small>Let's make a mess</small></span></button>
+        <button class="choice" data-value="Burgers" type="button"><span class="icon">🍔</span><span><strong>Burgers</strong><small>Comfort-food mood</small></span></button>
+        <button class="choice" data-value="Ramen" type="button"><span class="icon">🍜</span><span><strong>Ramen</strong><small>Warm and cosy</small></span></button>
+        <button class="choice" data-value="Brunch" type="button"><span class="icon">🥞</span><span><strong>Brunch</strong><small>Slow morning vibes</small></span></button>
+        <button class="choice" data-value="Dessert First" type="button"><span class="icon">🍰</span><span><strong>Dessert First</strong><small>Rules are optional</small></span></button>
+        <button class="choice" data-value="You Pick" type="button"><span class="icon">💗</span><span><strong>You Pick</strong><small>Surprise me with food</small></span></button>
+      </div>
+      <p class="tiny-note" id="foodError" role="status"></p>
+      <div class="button-row">
+        <button class="btn btn-soft" id="backToDate" type="button">← Back</button>
+        <button class="btn btn-primary" id="confirmDate" type="button">Make it a date ♥</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="screen-final" aria-labelledby="final-title">
+      <div class="eyebrow">officially the cutest plan</div>
+      <h1 id="final-title">It's a date, Jenso! 🌹</h1>
+      <p class="subtitle">Okay, now this is something to smile about.</p>
+      <div class="meme">
+        <div>
+          <div class="emoji">🐶💐</div>
+          <div class="caption">me showing up with the biggest smile</div>
+        </div>
+      </div>
+      <div class="summary" id="summary"></div>
+      <div class="photo-slot" id="photoSlot">
+        <div>
+          <div class="camera">📸💗</div>
+          <strong>Our photo goes here</strong>
+          <p style="margin:8px 0 0">We'll add your favourite photo of you two when you're ready.</p>
+          <label for="photoInput" class="btn btn-soft btn-small" style="display:inline-flex;align-items:center;margin-top:14px">Choose our photo</label>
+          <input id="photoInput" type="file" accept="image/*" class="hidden">
+        </div>
+      </div>
+      <p class="final-message">I'll pick you up at 7. 🚗</p>
+      <p class="subtitle">Can't wait to see you! ✨</p>
+      <div class="actions">
+        <button class="btn btn-primary" id="celebrateAgain" type="button">One more little celebration 🎉</button>
+        <button class="btn btn-soft" id="changePlan" type="button">Change the plan</button>
+      </div>
+      <p class="footer-note">Made with a little courage and a lot of 💗</p>
+    </section>
+  </main>
+
+  <script>
+    const screens = ["screen-question", "screen-date", "screen-food", "screen-final"];
+    const state = { activity: "", food: "", date: "", time: "7:00 PM" };
+    const noLabels = ["Try again? 🥹", "Are you sure?", "Think harder 😌", "Really, Jenso?", "Last chance 👀", "Nice try 😂", "Okay, that button is getting shy…"];
+    let noCount = 0;
+    let yesScale = 1;
+    let audioContext = null;
+    let musicTimer = null;
+    let musicOn = false;
+    let photoUrl = null;
+
+    function showScreen(id) {
+      screens.forEach(screenId => document.getElementById(screenId).classList.toggle("hidden", screenId !== id));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Decorative floating hearts; these never cover or intercept controls.
+    const floaties = document.getElementById("floaties");
+    for (let i = 0; i < 18; i++) {
+      const heart = document.createElement("span");
+      heart.className = "floaty";
+      heart.textContent = ["♡", "♥", "✦", "♡"][i % 4];
+      heart.style.left = (Math.random() * 100) + "%";
+      heart.style.fontSize = (14 + Math.random() * 20) + "px";
+      heart.style.animationDuration = (12 + Math.random() * 15) + "s";
+      heart.style.animationDelay = (-Math.random() * 24) + "s";
+      floaties.appendChild(heart);
+    }
+
+    document.getElementById("noButton").addEventListener("click", () => {
+      noCount++;
+      const noButton = document.getElementById("noButton");
+      noButton.textContent = noLabels[Math.min(noCount - 1, noLabels.length - 1)];
+      yesScale = Math.min(1 + noCount * 0.075, 1.55);
+      document.getElementById("yesButton").style.transform = `scale(${yesScale})`;
+      document.getElementById("catCaption").textContent =
+        noCount < 3 ? "me respectfully asking one more time 🥺" :
+        noCount < 6 ? "the cat has requested a team meeting 😭" :
+        "okay but look at this face 🥹";
+      // Keep both choices usable; the playful sequence never blocks the Yes option.
+    });
+
+    document.getElementById("yesButton").addEventListener("click", () => {
+      startMusic();
+      const dateInput = document.getElementById("dateInput");
+      const today = new Date();
+      const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+      dateInput.min = localToday;
+      dateInput.value = localToday;
+      showScreen("screen-date");
+    });
+
+    document.getElementById("backToQuestion").addEventListener("click", () => showScreen("screen-question"));
+
+    function setupChoiceGroup(groupId, stateKey) {
+      document.getElementById(groupId).addEventListener("click", (event) => {
+        const button = event.target.closest("button.choice");
+        if (!button) return;
+        state[stateKey] = button.dataset.value;
+        document.querySelectorAll(`#${groupId} .choice`).forEach(choice => {
+          const selected = choice === button;
+          choice.classList.toggle("selected", selected);
+          choice.setAttribute("aria-pressed", String(selected));
+        });
+      });
+    }
+    setupChoiceGroup("activityChoices", "activity");
+    setupChoiceGroup("foodChoices", "food");
+
+    document.getElementById("toFood").addEventListener("click", () => {
+      const date = document.getElementById("dateInput").value;
+      const today = new Date(); today.setHours(0,0,0,0);
+      const chosen = date ? new Date(date + "T00:00:00") : null;
+      const error = document.getElementById("dateError");
+      if (!date || !chosen || chosen < today) {
+        error.textContent = "Choose today or a future date first 💗";
+        return;
+      }
+      if (!state.activity) {
+        error.textContent = "Pick a date plan you like first ✨";
+        return;
+      }
+      error.textContent = "";
+      state.date = date;
+      state.time = document.getElementById("timeInput").value;
+      showScreen("screen-food");
+    });
+
+    document.getElementById("backToDate").addEventListener("click", () => showScreen("screen-date"));
+
+    document.getElementById("confirmDate").addEventListener("click", () => {
+      const error = document.getElementById("foodError");
+      if (!state.food) { error.textContent = "Pick something delicious first 🍓"; return; }
+      error.textContent = "";
+      renderSummary();
+      showScreen("screen-final");
+      makeConfetti();
+      startMusic();
+    });
+
+    function formatDate(dateString) {
+      const date = new Date(dateString + "T12:00:00");
+      return new Intl.DateTimeFormat(undefined, { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(date);
+    }
+    function renderSummary() {
+      const rows = [
+        ["📅", "Our date", formatDate(state.date)],
+        ["🕰️", "Time", state.time],
+        ["📍", "Our plan", state.activity],
+        ["🍓", "Food mission", state.food]
+      ];
+      document.getElementById("summary").innerHTML = rows.map(([icon, label, value]) =>
+        `<div class="summary-row"><div class="summary-icon">${icon}</div><div><div class="summary-label">${label}</div><div class="summary-value">${escapeHtml(value)}</div></div></div>`
+      ).join("");
+    }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[char]));
+    }
+    document.getElementById("changePlan").addEventListener("click", () => showScreen("screen-date"));
+    document.getElementById("celebrateAgain").addEventListener("click", makeConfetti);
+
+    function makeConfetti() {
+      const colors = ["#d6336c", "#f2a7c2", "#f8c76b", "#c6a2d8", "#ffffff"];
+      for (let i = 0; i < 65; i++) {
+        const piece = document.createElement("span");
+        piece.className = "confetti";
+        piece.textContent = ["♥", "✦", "•", "♡"][Math.floor(Math.random() * 4)];
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.color = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.fontSize = (10 + Math.random() * 16) + "px";
+        piece.style.animationDelay = Math.random() * 1.2 + "s";
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 5000);
+      }
+    }
+
+    // A tiny synthesized dreamy melody means the page has gentle music without a third-party audio dependency.
+    // It starts only after a visitor clicks a control, respecting browser autoplay restrictions.
+    function startMusic() {
+      if (musicOn) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) {
+        document.getElementById("musicToggle").textContent = "♫ Music unavailable";
+        return;
+      }
+      if (!audioContext) audioContext = new AudioCtx();
+      if (audioContext.state === "suspended") audioContext.resume();
+      musicOn = true;
+      document.getElementById("musicToggle").textContent = "♫ Music on";
+      document.getElementById("musicToggle").setAttribute("aria-pressed", "true");
+      const notes = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880, 698.46, 523.25, 659.25, 783.99, 1046.5];
+      let index = 0;
+      const playNote = () => {
+        if (!musicOn || !audioContext) return;
+        const now = audioContext.currentTime;
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const soft = audioContext.createOscillator();
+        const softGain = audioContext.createGain();
+        osc.type = "sine";
+        osc.frequency.value = notes[index % notes.length];
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.035, now + 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.15);
+        soft.type = "sine";
+        soft.frequency.value = notes[index % notes.length] / 2;
+        softGain.gain.setValueAtTime(0.0001, now);
+        softGain.gain.exponentialRampToValueAtTime(0.012, now + 0.2);
+        softGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.35);
+        osc.connect(gain); gain.connect(audioContext.destination);
+        soft.connect(softGain); softGain.connect(audioContext.destination);
+        osc.start(now); soft.start(now);
+        osc.stop(now + 1.2); soft.stop(now + 1.4);
+        index++;
+      };
+      playNote();
+      musicTimer = setInterval(playNote, 850);
+    }
+    function stopMusic() {
+      musicOn = false;
+      if (musicTimer) clearInterval(musicTimer);
+      musicTimer = null;
+      document.getElementById("musicToggle").textContent = "♫ Music off";
+      document.getElementById("musicToggle").setAttribute("aria-pressed", "false");
+    }
+    document.getElementById("musicToggle").addEventListener("click", () => musicOn ? stopMusic() : startMusic());
+
+    function handlePhotoChange(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      if (photoUrl) URL.revokeObjectURL(photoUrl);
+      photoUrl = URL.createObjectURL(file);
+      const slot = document.getElementById("photoSlot");
+      slot.innerHTML = "";
+      const image = document.createElement("img");
+      image.src = photoUrl;
+      image.alt = "Our favourite photo together";
+      const label = document.createElement("label");
+      label.htmlFor = "photoInput";
+      label.className = "btn btn-soft btn-small";
+      label.textContent = "Choose a different photo";
+      label.style.cssText = "display:inline-flex;align-items:center;margin-top:10px";
+      const input = document.createElement("input");
+      input.id = "photoInput";
+      input.type = "file";
+      input.accept = "image/*";
+      input.className = "hidden";
+      input.addEventListener("change", handlePhotoChange);
+      slot.appendChild(image);
+      slot.appendChild(label);
+      slot.appendChild(input);
+    }
+    document.getElementById("photoInput").addEventListener("change", handlePhotoChange);
+
+  </script>
+</body>
+</html>
