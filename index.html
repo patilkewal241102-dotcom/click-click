@@ -360,9 +360,10 @@
         "See you soon! 🙈💕"
       ].join("\n");
       // Encode the full message explicitly as UTF-8 for WhatsApp Web.
-      // Using WhatsApp Web's send endpoint avoids an extra wa.me redirect.
+      // Use the WhatsApp universal link so the browser can offer to open the WhatsApp app.
+      // encodeURIComponent preserves emoji and line breaks in the message.
       const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://web.whatsapp.com/send?phone=917700090027&text=${encodedMessage}`;
+      const whatsappUrl = `https://wa.me/917700090027?text=${encodedMessage}`;
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     });
 
