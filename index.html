@@ -250,9 +250,23 @@
     const noButton = document.getElementById("noButton");
 
     function dodgeNoButton() {
-      // A cheekier dodge on hover, with a moderate range so it stays inside the card.
-      const x = Math.round((Math.random() * 2 - 1) * 112);
-      const y = Math.round((Math.random() * 2 - 1) * 48);
+      // Bigger, cheekier jumps, clamped to the inside of the proposal card and viewport.
+      noButton.style.transform = "translate(0px, 0px)";
+      const buttonRect = noButton.getBoundingClientRect();
+      const cardRect = document.getElementById("screen-question").getBoundingClientRect();
+      const pad = 14;
+      const leftEdge = Math.max(cardRect.left + pad, pad);
+      const rightEdge = Math.min(cardRect.right - pad, window.innerWidth - pad);
+      const topEdge = Math.max(cardRect.top + pad, pad);
+      const bottomEdge = Math.min(cardRect.bottom - pad, window.innerHeight - pad);
+      const minX = leftEdge - buttonRect.left;
+      const maxX = rightEdge - buttonRect.right;
+      const minY = topEdge - buttonRect.top;
+      const maxY = bottomEdge - buttonRect.bottom;
+      const desiredX = (Math.random() * 2 - 1) * 190;
+      const desiredY = (Math.random() * 2 - 1) * 92;
+      const x = Math.round(Math.max(minX, Math.min(maxX, desiredX)));
+      const y = Math.round(Math.max(minY, Math.min(maxY, desiredY)));
       noButton.style.transform = `translate(${x}px, ${y}px)`;
     }
 
@@ -359,12 +373,16 @@
         `🍓 Food: ${state.food}`,
         "See you soon! 🙈💕"
       ].join("\n");
-      // Encode the full message explicitly as UTF-8 for WhatsApp Web.
-      // Use the WhatsApp universal link so the browser can offer to open the WhatsApp app.
-      // encodeURIComponent preserves emoji and line breaks in the message.
+      // On phones, use WhatsApp's app scheme first so the installed app can open directly.
+      // On desktop, use the universal link. Keep the message UTF-8 URL-encoded for emojis.
       const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/917700090027?text=${encodedMessage}`;
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      const isPhone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      if (isPhone) {
+        window.location.href = `whatsapp://send?phone=917700090027&text=${encodedMessage}`;
+      } else {
+        window.location.href = `https://wa.me/917700090027?text=${encodedMessage}`;
+      }
     });
 
     function makeConfetti() {
